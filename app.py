@@ -26,8 +26,6 @@ working_status = getenv("DEFALUT_TALKING", default="true").lower() == "true"
 
 app = Flask(__name__)
 
-kkkk = "LAL"
-
 
 # domain root
 @app.route("/")
@@ -53,33 +51,87 @@ def callback():
 @line_handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     msg = event.message.text
-    global kkkk
-    if kkkk == "LAL":
-        kkkk = "MLK"
-    else:
-        kkkk = "LAL"
 
-    flex_message = FlexSendMessage(
-        alt_text="test",
-        contents={
-            "type": "bubble",
-            "body": {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                    {
-                        "type": "text",
-                        "text": kkkk,
-                        "size": "xl",
-                        "align": "center",
-                        "weight": "bold",
-                        "color": "#0000ff",
-                    },
+    # flex_message = FlexSendMessage(
+    #     alt_text="test",
+    #     contents={
+    #         "type": "bubble",
+    #         "body": {
+    #             "type": "box",
+    #             "layout": "vertical",
+    #             "contents": [
+    #                 {
+    #                     "type": "text",
+    #                     "text": "hahaha",
+    #                     "size": "xl",
+    #                     "align": "center",
+    #                     "weight": "bold",
+    #                     "color": "#0000ff",
+    #                 },
+    #             ],
+    #         },
+    #     },
+    # )
+
+    carousel_template = CarouselTemplate(
+        columns=[
+            CarouselColumn(
+                thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/camels.png?raw=true",
+                title="第一名下注",
+                text="選擇你要下注贏得比賽的駱駝",
+                actions=[
+                    PostbackAction(
+                        label="橘色",
+                        data="#FF5733",
+                    ),
+                    PostbackAction(
+                        label="黃色",
+                        data="#FFFF00",
+                    ),
+                    PostbackAction(
+                        label="紫色",
+                        data="#8E459C",
+                    ),
+                    PostbackAction(
+                        label="綠色",
+                        data="#0E8937",
+                    ),
+                    PostbackAction(
+                        label="藍色",
+                        data="#38D5FF",
+                    ),
                 ],
-            },
-        },
+            ),
+            CarouselColumn(
+                thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/camels.png?raw=true",
+                title="最後一名下注",
+                text="選擇你要下注比賽最後一名的駱駝",
+                actions=[
+                    PostbackAction(
+                        label="橘色",
+                        data="#FF5733",
+                    ),
+                    PostbackAction(
+                        label="黃色",
+                        data="#FFFF00",
+                    ),
+                    PostbackAction(
+                        label="紫色",
+                        data="#8E459C",
+                    ),
+                    PostbackAction(
+                        label="綠色",
+                        data="#0E8937",
+                    ),
+                    PostbackAction(
+                        label="藍色",
+                        data="#38D5FF",
+                    ),
+                ],
+            ),
+        ]
     )
-    line_bot_api.reply_message(event.reply_token, flex_message)
+    line_bot_api.reply_message(event.reply_token, carousel_template)
 
 
 if __name__ == "__main__":
