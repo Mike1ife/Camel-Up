@@ -52,27 +52,6 @@ def callback():
 def handle_message(event):
     msg = event.message.text
 
-    # flex_message = FlexSendMessage(
-    #     alt_text="test",
-    #     contents={
-    #         "type": "bubble",
-    #         "body": {
-    #             "type": "box",
-    #             "layout": "vertical",
-    #             "contents": [
-    #                 {
-    #                     "type": "text",
-    #                     "text": "hahaha",
-    #                     "size": "xl",
-    #                     "align": "center",
-    #                     "weight": "bold",
-    #                     "color": "#0000ff",
-    #                 },
-    #             ],
-    #         },
-    #     },
-    # )
-
     carousel_template = CarouselTemplate(
         columns=[
             CarouselColumn(
@@ -132,6 +111,31 @@ def handle_message(event):
         ]
     )
     line_bot_api.reply_message(event.reply_token, carousel_template)
+
+
+@line_handler.add(PostbackEvent)
+def handle_postback(event):
+    data = event.postback.data
+    flex_message = FlexSendMessage(
+        alt_text="test",
+        contents={
+            "type": "bubble",
+            "body": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "hahaha",
+                        "size": "xl",
+                        "align": "center",
+                        "weight": "bold",
+                        "color": data,
+                    },
+                ],
+            },
+        },
+    )
 
 
 if __name__ == "__main__":
