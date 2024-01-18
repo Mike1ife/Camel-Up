@@ -53,6 +53,7 @@ def callback():
 @line_handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     msg = event.message.text
+    global kkkk
     if kkkk == "LAL":
         kkkk = "MLK"
     else:
