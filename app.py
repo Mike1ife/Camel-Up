@@ -75,12 +75,12 @@ def handle_message(event):
                 text="選擇你要下注的獎池",
                 actions=[
                     PostbackAction(
-                        label="黃色",
-                        data="#FFFF00 1",
+                        label="黃色第一",
+                        data="#DBED2A 1",
                     ),
                     PostbackAction(
-                        label="黃色",
-                        data="#FFFF00 -1",
+                        label="黃色墊底",
+                        data="#DBED2A -1",
                     ),
                 ],
             ),
