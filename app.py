@@ -55,56 +55,77 @@ def handle_message(event):
     carousel_template = CarouselTemplate(
         columns=[
             CarouselColumn(
-                thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/camels.png?raw=true",
-                title="第一名下注",
-                text="選擇你要下注贏得比賽的駱駝",
+                thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Red.png?raw=true",
+                title="紅色駱駝",
+                text="選擇你要下注的獎池",
                 actions=[
                     PostbackAction(
-                        label="橘色",
-                        data="#FF5733",
+                        label="紅色第一",
+                        data="#EC4747 1",
                     ),
                     PostbackAction(
-                        label="黃色",
-                        data="#FFFF00",
-                    ),
-                    PostbackAction(
-                        label="紫色",
-                        data="#8E459C",
-                    ),
-                    PostbackAction(
-                        label="綠色",
-                        data="#0E8937",
-                    ),
-                    PostbackAction(
-                        label="藍色",
-                        data="#38D5FF",
+                        label="紅色墊底",
+                        data="#EC4747 -1",
                     ),
                 ],
             ),
             CarouselColumn(
-                thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/camels.png?raw=true",
-                title="最後一名下注",
-                text="選擇你要下注比賽最後一名的駱駝",
+                thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Yellow.png?raw=true",
+                title="黃色駱駝",
+                text="選擇你要下注的獎池",
                 actions=[
                     PostbackAction(
-                        label="橘色",
-                        data="#FF5733",
+                        label="黃色",
+                        data="#FFFF00 1",
                     ),
                     PostbackAction(
                         label="黃色",
-                        data="#FFFF00",
+                        data="#FFFF00 -1",
+                    ),
+                ],
+            ),
+            CarouselColumn(
+                thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Purple.png?raw=true",
+                title="紫色駱駝",
+                text="選擇你要下注的獎池",
+                actions=[
+                    PostbackAction(
+                        label="紫色第一",
+                        data="#8E459C 1",
                     ),
                     PostbackAction(
-                        label="紫色",
-                        data="#8E459C",
+                        label="紫色墊底",
+                        data="#8E459C -1",
+                    ),
+                ],
+            ),
+            CarouselColumn(
+                thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Green.png?raw=true",
+                title="綠色駱駝",
+                text="選擇你要下注的獎池",
+                actions=[
+                    PostbackAction(
+                        label="綠色第一",
+                        data="#0E8937 1",
                     ),
                     PostbackAction(
-                        label="綠色",
-                        data="#0E8937",
+                        label="綠色墊底",
+                        data="#0E8937 -1",
+                    ),
+                ],
+            ),
+            CarouselColumn(
+                thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Blue.png?raw=true",
+                title="藍色駱駝",
+                text="選擇你要下注的獎池",
+                actions=[
+                    PostbackAction(
+                        label="藍色第一",
+                        data="#38D5FF 1",
                     ),
                     PostbackAction(
-                        label="藍色",
-                        data="#38D5FF",
+                        label="藍色墊底",
+                        data="#38D5FF -1",
                     ),
                 ],
             ),
@@ -119,6 +140,7 @@ def handle_message(event):
 @line_handler.add(PostbackEvent)
 def handle_postback(event):
     data = event.postback.data
+    color, num = data.split()
     flex_message = FlexSendMessage(
         alt_text="test",
         contents={
@@ -129,11 +151,11 @@ def handle_postback(event):
                 "contents": [
                     {
                         "type": "text",
-                        "text": "hahaha",
+                        "text": num,
                         "size": "xl",
                         "align": "center",
                         "weight": "bold",
-                        "color": data,
+                        "color": color,
                     },
                 ],
             },
