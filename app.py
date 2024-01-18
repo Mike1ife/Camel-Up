@@ -26,6 +26,8 @@ working_status = getenv("DEFALUT_TALKING", default="true").lower() == "true"
 
 app = Flask(__name__)
 
+kkkk = "LAL"
+
 
 # domain root
 @app.route("/")
@@ -51,6 +53,11 @@ def callback():
 @line_handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     msg = event.message.text
+    if kkkk == "LAL":
+        kkkk = "MLK"
+    else:
+        kkkk = "LAL"
+
     flex_message = FlexSendMessage(
         alt_text="test",
         contents={
@@ -61,21 +68,7 @@ def handle_message(event):
                 "contents": [
                     {
                         "type": "text",
-                        "text": "Closing the distance",
-                        "size": "md",
-                        "align": "center",
-                        "color": "#ff0000",
-                    },
-                    {
-                        "type": "text",
-                        "text": "Closing the distance",
-                        "size": "lg",
-                        "align": "center",
-                        "color": "#00ff00",
-                    },
-                    {
-                        "type": "text",
-                        "text": "Closing the distance",
+                        "text": kkkk,
                         "size": "xl",
                         "align": "center",
                         "weight": "bold",
