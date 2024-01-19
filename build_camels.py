@@ -7,7 +7,7 @@ yellow = Image.open("Yellow.png").convert("RGBA")
 purple = Image.open("Purple.png").convert("RGBA")
 green = Image.open("Green.png").convert("RGBA")
 
-names = ["Red", "Blue", "Yello", "Purple", "Green"]
+names = ["Red", "Blue", "Yellow", "Purple", "Green"]
 camels = [red, blue, yellow, purple, green]
 camel_width, camel_height = red.width, red.height - 33
 
