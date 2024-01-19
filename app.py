@@ -62,7 +62,7 @@ def handle_message(event):
         carousel_template = CarouselTemplate(
             columns=[
                 CarouselColumn(
-                    thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Red.png?raw=true",
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Red.png",
                     title="紅色駱駝",
                     text="選擇你要下注的獎池",
                     actions=[
