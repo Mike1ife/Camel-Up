@@ -51,6 +51,13 @@ def handle_message(event):
 
     if msg == "骰子":
         color = choice(["Red", "Blue", "Yellow", "Purple", "Green"])
+        color_hex = {
+            "Red": "#EC4747",
+            "Blue": "#38D5FF",
+            "Yellow": "#DBED2A",
+            "Purple": "#8E459C",
+            "Green": "#0E8937",
+        }
         step = choice(["1", "2", "3"])
         flex_message = FlexSendMessage(
             alt_text="Roll",
@@ -66,7 +73,7 @@ def handle_message(event):
                             "size": "xl",
                             "align": "center",
                             "weight": "bold",
-                            "color": color,
+                            "color": color_hex[color],
                         },
                     ],
                 },
