@@ -77,7 +77,7 @@ def handle_message(event):
                     ],
                 ),
                 CarouselColumn(
-                    thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Yellow.png?raw=true",
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Yellow.png",
                     title="黃色駱駝",
                     text="選擇你要下注的獎池",
                     actions=[
@@ -92,7 +92,7 @@ def handle_message(event):
                     ],
                 ),
                 CarouselColumn(
-                    thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Purple.png?raw=true",
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Purple.png",
                     title="紫色駱駝",
                     text="選擇你要下注的獎池",
                     actions=[
@@ -107,7 +107,7 @@ def handle_message(event):
                     ],
                 ),
                 CarouselColumn(
-                    thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Green.png?raw=true",
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Green.png",
                     title="綠色駱駝",
                     text="選擇你要下注的獎池",
                     actions=[
@@ -122,7 +122,7 @@ def handle_message(event):
                     ],
                 ),
                 CarouselColumn(
-                    thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Blue.png?raw=true",
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Blue.png",
                     title="藍色駱駝",
                     text="選擇你要下注的獎池",
                     actions=[
