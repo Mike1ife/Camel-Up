@@ -15,10 +15,7 @@ from linebot.models import (
 )
 
 from os import getenv
-from re import compile
-from urllib.parse import quote
-from random import choice, randint
-from requests import get
+from random import randint, choice
 
 line_bot_api = LineBotApi(getenv("LINE_CHANNEL_ACCESS_TOKEN"))
 line_handler = WebhookHandler(getenv("LINE_CHANNEL_SECRET"))
@@ -53,7 +50,30 @@ def handle_message(event):
     msg = event.message.text
 
     if msg == "骰子":
-        pass
+        color = choice(["Red", "Blue", "Yellow", "Purple", "Green"])
+        step = choice(["1", "2", "3"])
+        flex_message = FlexSendMessage(
+            alt_text="Roll",
+            contents={
+                "type": "bubble",
+                "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                        {
+                            "type": "text",
+                            "text": step,
+                            "size": "xl",
+                            "align": "center",
+                            "weight": "bold",
+                            "color": color,
+                        },
+                    ],
+                },
+            },
+        )
+    line_bot_api.reply_message(event.reply_token, flex_message)
+
     if msg == "投資":
         pass
     if msg == "陷阱":
