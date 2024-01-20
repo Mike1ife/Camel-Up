@@ -108,24 +108,81 @@ def handle_message(event):
         carousel_template = CarouselTemplate(
             columns=[
                 CarouselColumn(
-                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Coin5.png",
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Red5.png",
                     title="紅色駱駝",
                     text="紅色駱駝賭塊",
                     actions=[
                         PostbackAction(
-                            label="紅色駱駝賭塊",
+                            label="拿取",
                             data="#EC4747 1",
                         ),
                     ],
                 )
+                CarouselColumn(
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Red5.png",
+                    title="紅色駱駝",
+                    text="紅色駱駝賭塊",
+                    actions=[
+                        PostbackAction(
+                            label="拿取",
+                            data="#EC4747 1",
+                        ),
+                    ],
+                )
+                CarouselColumn(
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Yellow5.png",
+                    title="黃色駱駝",
+                    text="黃色駱駝賭塊",
+                    actions=[
+                        PostbackAction(
+                            label="拿取",
+                            data="#DBED2A -1",
+                        ),
+                    ],
+                ),
+                CarouselColumn(
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Purple5.png",
+                    title="紫色駱駝",
+                    text="紫色駱駝賭塊",
+                    actions=[
+                        PostbackAction(
+                            label="拿取",
+                            data="#8E459C 1",
+                        ),
+                    ],
+                ),
+                CarouselColumn(
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Green5.png",
+                    title="綠色駱駝",
+                    text="綠色駱駝賭塊",
+                    actions=[
+                        PostbackAction(
+                            label="拿取",
+                            data="#0E8937 1",
+                        ),
+                    ],
+                ),
+                CarouselColumn(
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Blue5.png",
+                    title="藍色駱駝",
+                    text="藍色駱駝賭塊",
+                    actions=[
+                        PostbackAction(
+                            label="拿取",
+                            data="#38D5FF -1",
+                        ),
+                    ],
+                ),
             ]
         )
         line_bot_api.reply_message(
             event.reply_token,
             TemplateSendMessage(alt_text="下注", template=carousel_template),
         )
+
     if msg == "陷阱":
         pass
+
     if msg == "下注":
         carousel_template = CarouselTemplate(
             columns=[
