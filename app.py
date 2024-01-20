@@ -69,14 +69,6 @@ def handle_message(event):
                     "contents": [
                         {
                             "type": "text",
-                            "text": "骰子結果: ",
-                            "size": "xl",
-                            "align": "center",
-                            "weight": "bold",
-                            "color": "#000000",
-                        },
-                        {
-                            "type": "text",
                             "text": color,
                             "size": "xl",
                             "align": "center",
@@ -106,7 +98,24 @@ def handle_message(event):
     line_bot_api.reply_message(event.reply_token, flex_message)
 
     if msg == "投資":
-        pass
+        carousel_template = CarouselTemplate(
+            columns=[
+                CarouselColumn(
+                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Coin5.png",
+                    title="<font color='#FF0000'>紅色駱駝</font>",
+                    actions=[
+                        PostbackAction(
+                            label="紅色駱駝賭塊",
+                            data="#EC4747 1",
+                        ),
+                    ],
+                ),
+            ]
+        )
+        line_bot_api.reply_message(
+            event.reply_token,
+            TemplateSendMessage(alt_text="下注", template=carousel_template),
+        )
     if msg == "陷阱":
         pass
     if msg == "下注":
