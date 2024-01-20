@@ -108,7 +108,7 @@ def handle_message(event):
         carousel_template = CarouselTemplate(
             columns=[
                 CarouselColumn(
-                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Red5.png",
+                    thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Red5.png?raw=true",
                     title="紅色駱駝",
                     text="紅色駱駝賭塊",
                     actions=[
@@ -119,7 +119,7 @@ def handle_message(event):
                     ],
                 ),
                 CarouselColumn(
-                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Yellow5.png",
+                    thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Yellow5.png?raw=true",
                     title="黃色駱駝",
                     text="黃色駱駝賭塊",
                     actions=[
@@ -141,7 +141,7 @@ def handle_message(event):
                     ],
                 ),
                 CarouselColumn(
-                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Green5.png",
+                    thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Green5.png?raw=true",
                     title="綠色駱駝",
                     text="綠色駱駝賭塊",
                     actions=[
@@ -152,7 +152,7 @@ def handle_message(event):
                     ],
                 ),
                 CarouselColumn(
-                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Blue5.png",
+                    thumbnail_image_url="https://github.com/Mike1ife/Camel-Up/blob/main/images/Blue5.png?raw=true",
                     title="藍色駱駝",
                     text="藍色駱駝賭塊",
                     actions=[
