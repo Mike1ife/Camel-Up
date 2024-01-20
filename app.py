@@ -113,8 +113,8 @@ def handle_message(event):
                     text="紅色駱駝賭塊",
                     actions=[
                         PostbackAction(
-                            label="拿取",
-                            data="#EC4747 1",
+                            label="投資",
+                            data="投資 紅色",
                         ),
                     ],
                 ),
@@ -124,8 +124,8 @@ def handle_message(event):
                     text="黃色駱駝賭塊",
                     actions=[
                         PostbackAction(
-                            label="拿取",
-                            data="#DBED2A -1",
+                            label="投資",
+                            data="投資 黃色",
                         ),
                     ],
                 ),
@@ -135,8 +135,8 @@ def handle_message(event):
                     text="紫色駱駝賭塊",
                     actions=[
                         PostbackAction(
-                            label="拿取",
-                            data="#8E459C 1",
+                            label="投資",
+                            data="投資 紫色",
                         ),
                     ],
                 ),
@@ -146,8 +146,8 @@ def handle_message(event):
                     text="綠色駱駝賭塊",
                     actions=[
                         PostbackAction(
-                            label="拿取",
-                            data="#0E8937 1",
+                            label="投資",
+                            data="投資 綠色",
                         ),
                     ],
                 ),
@@ -157,8 +157,8 @@ def handle_message(event):
                     text="藍色駱駝賭塊",
                     actions=[
                         PostbackAction(
-                            label="拿取",
-                            data="#38D5FF -1",
+                            label="投資",
+                            data="投資 藍色",
                         ),
                     ],
                 ),
@@ -182,11 +182,11 @@ def handle_message(event):
                     actions=[
                         PostbackAction(
                             label="紅色第一",
-                            data="#EC4747 1",
+                            data="下注 紅色 第一",
                         ),
                         PostbackAction(
                             label="紅色墊底",
-                            data="#EC4747 -1",
+                            data="下注 紅色 墊底",
                         ),
                     ],
                 ),
@@ -197,11 +197,11 @@ def handle_message(event):
                     actions=[
                         PostbackAction(
                             label="黃色第一",
-                            data="#DBED2A 1",
+                            data="下注 黃色 第一",
                         ),
                         PostbackAction(
                             label="黃色墊底",
-                            data="#DBED2A -1",
+                            data="下注 黃色 墊底",
                         ),
                     ],
                 ),
@@ -212,11 +212,11 @@ def handle_message(event):
                     actions=[
                         PostbackAction(
                             label="紫色第一",
-                            data="#8E459C 1",
+                            data="下注 紫色 第一",
                         ),
                         PostbackAction(
                             label="紫色墊底",
-                            data="#8E459C -1",
+                            data="下注 紫色 墊底",
                         ),
                     ],
                 ),
@@ -227,11 +227,11 @@ def handle_message(event):
                     actions=[
                         PostbackAction(
                             label="綠色第一",
-                            data="#0E8937 1",
+                            data="下注 綠色 第一",
                         ),
                         PostbackAction(
                             label="綠色墊底",
-                            data="#0E8937 -1",
+                            data="下注 綠色 墊底",
                         ),
                     ],
                 ),
@@ -242,11 +242,11 @@ def handle_message(event):
                     actions=[
                         PostbackAction(
                             label="藍色第一",
-                            data="#38D5FF 1",
+                            data="下注 藍色 第一",
                         ),
                         PostbackAction(
                             label="藍色墊底",
-                            data="#38D5FF -1",
+                            data="下注 藍色 墊底",
                         ),
                     ],
                 ),
@@ -261,28 +261,67 @@ def handle_message(event):
 @line_handler.add(PostbackEvent)
 def handle_postback(event):
     data = event.postback.data
-    color, num = data.split()
-    flex_message = FlexSendMessage(
-        alt_text="test",
-        contents={
-            "type": "bubble",
-            "body": {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                    {
-                        "type": "text",
-                        "text": num,
-                        "size": "xl",
-                        "align": "center",
-                        "weight": "bold",
-                        "color": color,
-                    },
-                ],
+    data = data.split()
+    if data[0] == "下注":
+        color, place = data[1], data[2]
+        color_hex = {
+            "紅色": "#EC4747",
+            "藍色": "#38D5FF",
+            "黃色": "#DBED2A",
+            "紫色": "#8E459C",
+            "綠色": "#0E8937",
+        }
+        flex_message = FlexSendMessage(
+            alt_text="test",
+            contents={
+                "type": "bubble",
+                "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                        {
+                            "type": "text",
+                            "text": f"{color} {place}",
+                            "size": "xl",
+                            "align": "center",
+                            "weight": "bold",
+                            "color": color_hex[color],
+                        },
+                    ],
+                },
             },
-        },
-    )
-    line_bot_api.reply_message(event.reply_token, flex_message)
+        )
+        line_bot_api.reply_message(event.reply_token, flex_message)
+    elif data[0] == "投資":
+        color = data[1]
+        color_hex = {
+            "紅色": "#EC4747",
+            "藍色": "#38D5FF",
+            "黃色": "#DBED2A",
+            "紫色": "#8E459C",
+            "綠色": "#0E8937",
+        }
+        flex_message = FlexSendMessage(
+            alt_text="test",
+            contents={
+                "type": "bubble",
+                "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                        {
+                            "type": "text",
+                            "text": f"{color}賭塊",
+                            "size": "xl",
+                            "align": "center",
+                            "weight": "bold",
+                            "color": color_hex[color],
+                        },
+                    ],
+                },
+            },
+        )
+        line_bot_api.reply_message(event.reply_token, flex_message)
 
 
 if __name__ == "__main__":
