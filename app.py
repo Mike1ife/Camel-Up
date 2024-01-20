@@ -169,8 +169,10 @@ def handle_message(event):
             TemplateSendMessage(alt_text="下注", template=carousel_template),
         )
 
-    if msg == "陷阱":
-        pass
+    if msg[:2] == "陷阱":
+        kind, place = msg.split()[1:]
+        text_message = TextSendMessage(text=f"放至陷阱({kind})到{place}")
+        line_bot_api.reply_message(event.reply_token, text_message)
 
     if msg == "下注":
         carousel_template = CarouselTemplate(
