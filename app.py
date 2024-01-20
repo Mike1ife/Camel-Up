@@ -49,6 +49,13 @@ def callback():
 def handle_message(event):
     msg = event.message.text
 
+    if msg == "地圖":
+        image_message = ImageSendMessage(
+            original_content_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Board.png",
+            preview_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Board.png",
+        )
+        line_bot_api.reply_message(event.reply_token, image_message)
+
     if msg == "骰子":
         color = choice(["紅色", "藍色", "黃色", "紫色", "綠色"])
         color_hex = {
