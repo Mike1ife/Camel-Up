@@ -95,7 +95,7 @@ def handle_message(event):
                 },
             },
         )
-    line_bot_api.reply_message(event.reply_token, flex_message)
+        line_bot_api.reply_message(event.reply_token, flex_message)
 
     if msg == "投資":
         carousel_template = CarouselTemplate(
