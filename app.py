@@ -102,7 +102,7 @@ def handle_message(event):
             columns=[
                 CarouselColumn(
                     thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Coin5.png",
-                    title="<font color='#FF0000'>紅色駱駝</font>",
+                    title="紅色駱駝",
                     actions=[
                         PostbackAction(
                             label="紅色駱駝賭塊",
