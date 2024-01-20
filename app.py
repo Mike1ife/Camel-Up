@@ -50,13 +50,13 @@ def handle_message(event):
     msg = event.message.text
 
     if msg == "骰子":
-        color = choice(["Red", "Blue", "Yellow", "Purple", "Green"])
+        color = choice(["紅色", "藍色", "黃色", "紫色", "綠色"])
         color_hex = {
-            "Red": "#EC4747",
-            "Blue": "#38D5FF",
-            "Yellow": "#DBED2A",
-            "Purple": "#8E459C",
-            "Green": "#0E8937",
+            "紅色": "#EC4747",
+            "藍色": "#38D5FF",
+            "黃色": "#DBED2A",
+            "紫色": "#8E459C",
+            "綠色": "#0E8937",
         }
         step = choice(["1", "2", "3"])
         flex_message = FlexSendMessage(
@@ -69,7 +69,31 @@ def handle_message(event):
                     "contents": [
                         {
                             "type": "text",
-                            "text": step,
+                            "text": "骰子結果: ",
+                            "size": "xl",
+                            "align": "center",
+                            "weight": "bold",
+                            "color": "#000000",
+                        },
+                        {
+                            "type": "text",
+                            "text": color,
+                            "size": "xl",
+                            "align": "center",
+                            "weight": "bold",
+                            "color": color_hex[color],
+                        },
+                        {
+                            "type": "text",
+                            "text": "駱駝走",
+                            "size": "xl",
+                            "align": "center",
+                            "weight": "bold",
+                            "color": "#000000",
+                        },
+                        {
+                            "type": "text",
+                            "text": f"{step}步",
                             "size": "xl",
                             "align": "center",
                             "weight": "bold",
