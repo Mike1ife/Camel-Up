@@ -65,7 +65,7 @@ def handle_message(event):
                 "type": "bubble",
                 "body": {
                     "type": "box",
-                    "layout": "vertical",
+                    "layout": "horizontal",
                     "contents": [
                         {
                             "type": "text",
