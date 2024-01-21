@@ -7,7 +7,13 @@ from google.oauth2.service_account import Credentials
 
 class Camels:
     def __init__(self):
-        self.board = self._start_board()
+        self.board = Image.open(
+            get(
+                "https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Board.png",
+                stream=True,
+            ).raw
+        ).convert("RGBA")
+
         self.grid = {
             1: None,
             2: None,
@@ -176,15 +182,6 @@ class Camels:
             coordinates[i] = coordinate
         return coordinates
 
-    def _start_board(self):
-        board_img = Image.open(
-            get(
-                "https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Board.png",
-                stream=True,
-            ).raw
-        ).convert("RGBA")
-        return board_img
-
 
 def init():
     scope = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -213,12 +210,13 @@ def roll_dice(rows, username, camels):
 
     color = choice(camels.can_move)
     camels.can_move.remove(color)
-    step = choice(["1", "2", "3"])
-    board = draw_board(color, step, camels)
-    return rows, color, step, board
+    step = choice([1, 2, 3])
+    move_forward_camel(color, step, camels)
+    board_image = draw_board(camels)
+    return (rows, color, step, board_image)
 
 
-def draw_board(color, step, camels):
+def move_forward_camel(color, step, camels):
     # Get current moving camel
     moving = camels.color2camel[color]
     start = moving["place"]
@@ -237,37 +235,56 @@ def draw_board(color, step, camels):
 
     # Get to destination
     camels.color2camel[color]["place"] = destination
-    camels.grid[destination] = camels.color2camel[color]
+    if camels.grid[destination] == None:
+        # If no other camel in destination
+        camels.grid[destination] = camels.color2camel[color]
+    else:
+        # Go up to the camel
+        next = camels.grid[destination]
+        while next["up"] != None:
+            next = next["up"]
 
-    total_num = 1
+        next["up"] = camels.color2camel[color]
+        camels.color2camel[color]["down"] = next
+
     # Update the infomation of its parents
-    unit = f"{color}_"
     next = camels.color2camel[color]["up"]
     while next != None:
-        total_num += 1
-        unit += f"{next['color']}_"
         # Update the place of its parents
         camels.color2camel[next["color"]]["place"] = destination
         next = camels.color2camel[next["color"]]["up"]
 
-    camel_url = f"https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/{unit[:-1]}.png"
-    camel_unit_img = Image.open(
-        get(
-            camel_url,
-            stream=True,
-        ).raw
-    )
 
+def draw_board(camels):
     # Draw the result
-    board_img = camels.board
-    x, y = camels.coordinates[destination][total_num]
-    if destination in camels.need_trans:
-        camel_unit_img = camel_unit_img.transpose(Image.FLIP_LEFT_RIGHT)
+    board_img = camels.board.copy()
+    for place, camel in camels.grid.items():
+        if camel != None:
+            total_num = 1
+            # The color of current camel
+            color = camel["color"]
+            # The color of this unit
+            unit = f"{color}_"
+            next = camels.color2camel[color]["up"]
+            while next != None:
+                total_num += 1
+                unit += f"{next['color']}_"
+                next = camels.color2camel[next["color"]]["up"]
 
-    board_img.paste(camel_unit_img, [x, y], mask=camel_unit_img)
-    board_img.show()
-    camels.board = board_img
+            camel_url = f"https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/{unit[:-1]}.png"
 
+            camel_unit_img = Image.open(
+                get(
+                    camel_url,
+                    stream=True,
+                ).raw
+            )
+
+            x, y = camels.coordinates[place][total_num]
+            if place in camels.need_trans:
+                camel_unit_img = camel_unit_img.transpose(Image.FLIP_LEFT_RIGHT)
+
+            board_img.paste(camel_unit_img, [x, y], mask=camel_unit_img)
     return board_img
 
 
@@ -280,12 +297,12 @@ def update_sheet(header, rows, worksheet):
 header, rows, worksheet = init()
 camels = Camels()
 
-camels.red["up"] = camels.blue
-camels.blue["down"] = camels.red
+# for i in range(3):
+#     for j in range(5):
+#         if j == 4:
+#             camels.restart_round()
+#         rows = roll_dice(rows, "Mike", camels)
 
-x = draw_board("Red", 3, camels)
-x = draw_board("Blue", 3, camels)
 
-
-# rows, color, step, board = roll_dice(rows, "Mike", camels)
+rows, color, step, board_image = roll_dice(rows, "Mike", camels)
 # update_sheet(header, rows, worksheet)

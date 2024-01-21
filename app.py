@@ -23,6 +23,7 @@ working_status = getenv("DEFALUT_TALKING", default="true").lower() == "true"
 
 camels = None
 switch = "off"
+operations = ["結束", "開始", "地圖", "骰子", "投資", "陷阱", "下注"]
 
 app = Flask(__name__)
 
@@ -52,7 +53,7 @@ def callback():
 def handle_message(event):
     msg = event.message.text
 
-    global switch, camels
+    global switch, camels, operations
     if switch == "off":
         # Only tolerate 開始
         if msg == "開始":
@@ -88,7 +89,8 @@ def handle_message(event):
                 user_id = event.source.user_id
                 profile = line_bot_api.get_profile(user_id)
                 username = profile.display_name
-                rows, color, step, board = roll_dice(rows, username, camels)
+                rows, color, step, board_image = roll_dice(rows, username, camels)
+
                 color_hex = {
                     "紅色": "#EC4747",
                     "藍色": "#38D5FF",
@@ -208,85 +210,85 @@ def handle_message(event):
             line_bot_api.reply_message(event.reply_token, text_message)
 
         if msg == "下注":
-        carousel_template = CarouselTemplate(
-            columns=[
-                CarouselColumn(
-                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Red.png",
-                    title="紅色駱駝",
-                    text="選擇你要下注的獎池",
-                    actions=[
-                        PostbackAction(
-                            label="紅色第一",
-                            data="下注 紅色 第一",
-                        ),
-                        PostbackAction(
-                            label="紅色墊底",
-                            data="下注 紅色 墊底",
-                        ),
-                    ],
-                ),
-                CarouselColumn(
-                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Yellow.png",
-                    title="黃色駱駝",
-                    text="選擇你要下注的獎池",
-                    actions=[
-                        PostbackAction(
-                            label="黃色第一",
-                            data="下注 黃色 第一",
-                        ),
-                        PostbackAction(
-                            label="黃色墊底",
-                            data="下注 黃色 墊底",
-                        ),
-                    ],
-                ),
-                CarouselColumn(
-                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Purple.png",
-                    title="紫色駱駝",
-                    text="選擇你要下注的獎池",
-                    actions=[
-                        PostbackAction(
-                            label="紫色第一",
-                            data="下注 紫色 第一",
-                        ),
-                        PostbackAction(
-                            label="紫色墊底",
-                            data="下注 紫色 墊底",
-                        ),
-                    ],
-                ),
-                CarouselColumn(
-                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Green.png",
-                    title="綠色駱駝",
-                    text="選擇你要下注的獎池",
-                    actions=[
-                        PostbackAction(
-                            label="綠色第一",
-                            data="下注 綠色 第一",
-                        ),
-                        PostbackAction(
-                            label="綠色墊底",
-                            data="下注 綠色 墊底",
-                        ),
-                    ],
-                ),
-                CarouselColumn(
-                    thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Blue.png",
-                    title="藍色駱駝",
-                    text="選擇你要下注的獎池",
-                    actions=[
-                        PostbackAction(
-                            label="藍色第一",
-                            data="下注 藍色 第一",
-                        ),
-                        PostbackAction(
-                            label="藍色墊底",
-                            data="下注 藍色 墊底",
-                        ),
-                    ],
-                ),
-            ]
-        )
+            carousel_template = CarouselTemplate(
+                columns=[
+                    CarouselColumn(
+                        thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Red.png",
+                        title="紅色駱駝",
+                        text="選擇你要下注的獎池",
+                        actions=[
+                            PostbackAction(
+                                label="紅色第一",
+                                data="下注 紅色 第一",
+                            ),
+                            PostbackAction(
+                                label="紅色墊底",
+                                data="下注 紅色 墊底",
+                            ),
+                        ],
+                    ),
+                    CarouselColumn(
+                        thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Yellow.png",
+                        title="黃色駱駝",
+                        text="選擇你要下注的獎池",
+                        actions=[
+                            PostbackAction(
+                                label="黃色第一",
+                                data="下注 黃色 第一",
+                            ),
+                            PostbackAction(
+                                label="黃色墊底",
+                                data="下注 黃色 墊底",
+                            ),
+                        ],
+                    ),
+                    CarouselColumn(
+                        thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Purple.png",
+                        title="紫色駱駝",
+                        text="選擇你要下注的獎池",
+                        actions=[
+                            PostbackAction(
+                                label="紫色第一",
+                                data="下注 紫色 第一",
+                            ),
+                            PostbackAction(
+                                label="紫色墊底",
+                                data="下注 紫色 墊底",
+                            ),
+                        ],
+                    ),
+                    CarouselColumn(
+                        thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Green.png",
+                        title="綠色駱駝",
+                        text="選擇你要下注的獎池",
+                        actions=[
+                            PostbackAction(
+                                label="綠色第一",
+                                data="下注 綠色 第一",
+                            ),
+                            PostbackAction(
+                                label="綠色墊底",
+                                data="下注 綠色 墊底",
+                            ),
+                        ],
+                    ),
+                    CarouselColumn(
+                        thumbnail_image_url="https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/Blue.png",
+                        title="藍色駱駝",
+                        text="選擇你要下注的獎池",
+                        actions=[
+                            PostbackAction(
+                                label="藍色第一",
+                                data="下注 藍色 第一",
+                            ),
+                            PostbackAction(
+                                label="藍色墊底",
+                                data="下注 藍色 墊底",
+                            ),
+                        ],
+                    ),
+                ]
+            )
         line_bot_api.reply_message(
             event.reply_token,
             TemplateSendMessage(alt_text="下注", template=carousel_template),
