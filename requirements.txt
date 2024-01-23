@@ -1,8 +1,6 @@
 line-bot-sdk
 flask
 requests
-datetime
-beautifulsoup4
 pillow
 gspread
 google-auth

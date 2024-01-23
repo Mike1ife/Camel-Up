@@ -5,7 +5,45 @@ from gspread import authorize
 from google.oauth2.service_account import Credentials
 
 
-class Camels:
+class Game:
+    grid = {
+        1: None,
+        2: None,
+        3: None,
+        4: None,
+        5: None,
+        6: None,
+        7: None,
+        8: None,
+        9: None,
+        10: None,
+        11: None,
+        12: None,
+        13: None,
+        14: None,
+        15: None,
+        16: None,
+    }
+
+    traps = {
+        1: None,
+        2: None,
+        3: None,
+        4: None,
+        5: None,
+        6: None,
+        7: None,
+        8: None,
+        9: None,
+        10: None,
+        11: None,
+        12: None,
+        13: None,
+        14: None,
+        15: None,
+        16: None,
+    }
+
     def __init__(self):
         self.board = Image.open(
             get(
@@ -14,30 +52,12 @@ class Camels:
             ).raw
         ).convert("RGBA")
 
-        self.grid = {
-            1: None,
-            2: None,
-            3: None,
-            4: None,
-            5: None,
-            6: None,
-            7: None,
-            8: None,
-            9: None,
-            10: None,
-            11: None,
-            12: None,
-            13: None,
-            14: None,
-            15: None,
-            16: None,
-        }
+        self.red = Camel("Red")
+        self.blue = Camel("Blue")
+        self.yellow = Camel("Yellow")
+        self.purple = Camel("Purple")
+        self.green = Camel("Green")
 
-        self.red = {"color": "Red", "place": 0, "up": None, "down": None}
-        self.blue = {"color": "Blue", "place": 0, "up": None, "down": None}
-        self.yellow = {"color": "Yellow", "place": 0, "up": None, "down": None}
-        self.purple = {"color": "Purple", "place": 0, "up": None, "down": None}
-        self.green = {"color": "Green", "place": 0, "up": None, "down": None}
         self.color2camel = {
             "Red": self.red,
             "Blue": self.blue,
@@ -141,6 +161,74 @@ class Camels:
 
     def restart_round(self):
         self.can_move = ["Red", "Blue", "Yellow", "Purple", "Green"]
+        self.traps = {
+            1: None,
+            2: None,
+            3: None,
+            4: None,
+            5: None,
+            6: None,
+            7: None,
+            8: None,
+            9: None,
+            10: None,
+            11: None,
+            12: None,
+            13: None,
+            14: None,
+            15: None,
+            16: None,
+        }
+
+    def roll_dice(self, rows, username):
+        rows = add_money(rows, username, 1)
+
+        color = choice(self.can_move)
+        self.can_move.remove(color)
+        step = choice([1, 2, 3])
+        is_over, winner = self.color2camel[color].move_forward(step)
+        board_image = self.draw_board()
+        return (rows, color, step, board_image, is_over, winner)
+
+    def draw_board(self):
+        # Draw the result
+        board_img = self.board.copy()
+        for place, camel in self.grid.items():
+            if camel != None:
+                total_num = 1
+                # The color of current camel
+                color = camel.color
+                # The color of this unit
+                unit = f"{color}_"
+                next = self.color2camel[color].up
+                while next != None:
+                    total_num += 1
+                    unit += f"{next.color}_"
+                    next = next.up
+
+                camel_url = f"https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/{unit[:-1]}.png"
+
+                camel_unit_img = Image.open(
+                    get(
+                        camel_url,
+                        stream=True,
+                    ).raw
+                )
+
+                x, y = self.coordinates[place][total_num]
+                if place in self.need_trans:
+                    camel_unit_img = camel_unit_img.transpose(Image.FLIP_LEFT_RIGHT)
+
+                board_img.paste(camel_unit_img, [x, y], mask=camel_unit_img)
+
+        for place, trap in self.traps.items():
+            if trap != None:
+                trap_card = Image.open(f"images/Trap_{trap.method}.png").convert("RGBA")
+                x, y = self.coordinates[place][3]
+
+                board_img.paste(trap_card, box=[x - 50, y - 30], mask=trap_card)
+
+        return board_img
 
     def _get_coordinate(self):
         # [pos, number]
@@ -182,6 +270,125 @@ class Camels:
             coordinates[i] = coordinate
         return coordinates
 
+    def get_grid_info(self, place):
+        return self.grid[place]
+
+    def update_grid_info(self, place, camel):
+        self.grid[place] = camel
+
+    def place_trap(self, place, method):
+        new_trap = Trap("Mike", place, method)
+        self.traps[place] = new_trap
+
+    def get_trap_info(self, place):
+        return self.traps[place]
+
+
+class Camel(Game):
+    def __init__(self, color):
+        self.color = color
+        self.place = 0
+        self.up = None
+        self.down = None
+
+    def move_forward(self, step):
+        print(f"{self.color} 往前走 {step} 步")
+
+        is_over, winner = False, None
+        # Get current moving camel
+        start = self.place
+
+        # Get the destination
+        destination = start + step
+
+        if destination > 16:
+            is_over = True
+            destination %= 16
+            winner = self
+            while winner.up != None:
+                winner = winner.up
+
+        # Get rid of its children
+        if self.down != None:
+            # Modify true value
+            self.down.up = None
+            self.down = None
+        else:
+            # Get rid of the grid if no children
+            self.update_grid_info(start, None)
+
+        # Get to destination
+        self.place = destination
+        if self.get_grid_info(destination) == None:
+            # If no other camel in destination
+            self.update_grid_info(destination, self)
+        else:
+            # Go up to the camel
+            next = self.get_grid_info(destination)
+            while next.up != None:
+                next = next.up
+
+            next.up = self
+            self.down = next
+
+        # Update the infomation of its parents
+        next = self.up
+        while next != None:
+            # Update the place of its parents
+            next.place = destination
+            next = next.up
+
+        # Step on a Trap
+        if self.get_trap_info(destination) != None:
+            print(f"{self.color} 踩到 {self.get_trap_info(destination).method}")
+            if self.get_trap_info(destination).method == "Add":
+                is_over, winner = self.move_forward(1)
+            elif self.get_trap_info(destination).method == "Minus":
+                self.move_backward(1)
+
+        return is_over, winner
+
+    def move_backward(self, step):
+        print(f"{self.color} 往後走 {step} 步")
+
+        # Get current moving camel
+        start = self.place
+
+        # Get the destination
+        destination = start - step
+
+        # Get rid of the grid (Trap -> No children)
+        self.update_grid_info(start, None)
+
+        # Get to destination
+        self.place = destination
+        if self.get_grid_info(destination) != None:
+            # Go down to the camel
+            unit_top = self
+            # Get the camel on the top
+            while unit_top.up != None:
+                unit_top = unit_top.up
+            # Go down to the existing camel
+            self.get_grid_info(destination).down = unit_top
+            unit_top.up = self.get_grid_info(destination)
+
+        # Update grid infomation
+        self.update_grid_info(destination, self)
+
+        # Update the infomation of its parents
+        next = self.up
+        while next != None:
+            # Update the place of its parents
+            next.place = destination
+            next = next.up
+
+
+class Trap:
+    def __init__(self, username, place, method):
+        self.username = username
+        self.place = place
+        self.method = method
+
 
 def init():
     scope = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -205,89 +412,6 @@ def add_money(rows, username, value):
             return rows
 
 
-def roll_dice(rows, username, camels):
-    rows = add_money(rows, username, 1)
-
-    color = choice(camels.can_move)
-    camels.can_move.remove(color)
-    step = choice([1, 2, 3])
-    move_forward_camel(color, step, camels)
-    board_image = draw_board(camels)
-    return (rows, color, step, board_image)
-
-
-def move_forward_camel(color, step, camels):
-    # Get current moving camel
-    moving = camels.color2camel[color]
-    start = moving["place"]
-
-    # Get the destination
-    destination = start + step
-
-    # Get rid of its children
-    if moving["down"] != None:
-        # Modify true value
-        camels.color2camel[color]["down"]["up"] = None
-        camels.color2camel[color]["down"] = None
-    else:
-        # Get rid of the grid if no children
-        camels.grid[start] = None
-
-    # Get to destination
-    camels.color2camel[color]["place"] = destination
-    if camels.grid[destination] == None:
-        # If no other camel in destination
-        camels.grid[destination] = camels.color2camel[color]
-    else:
-        # Go up to the camel
-        next = camels.grid[destination]
-        while next["up"] != None:
-            next = next["up"]
-
-        next["up"] = camels.color2camel[color]
-        camels.color2camel[color]["down"] = next
-
-    # Update the infomation of its parents
-    next = camels.color2camel[color]["up"]
-    while next != None:
-        # Update the place of its parents
-        camels.color2camel[next["color"]]["place"] = destination
-        next = camels.color2camel[next["color"]]["up"]
-
-
-def draw_board(camels):
-    # Draw the result
-    board_img = camels.board.copy()
-    for place, camel in camels.grid.items():
-        if camel != None:
-            total_num = 1
-            # The color of current camel
-            color = camel["color"]
-            # The color of this unit
-            unit = f"{color}_"
-            next = camels.color2camel[color]["up"]
-            while next != None:
-                total_num += 1
-                unit += f"{next['color']}_"
-                next = camels.color2camel[next["color"]]["up"]
-
-            camel_url = f"https://raw.githubusercontent.com/Mike1ife/Camel-Up/main/images/{unit[:-1]}.png"
-
-            camel_unit_img = Image.open(
-                get(
-                    camel_url,
-                    stream=True,
-                ).raw
-            )
-
-            x, y = camels.coordinates[place][total_num]
-            if place in camels.need_trans:
-                camel_unit_img = camel_unit_img.transpose(Image.FLIP_LEFT_RIGHT)
-
-            board_img.paste(camel_unit_img, [x, y], mask=camel_unit_img)
-    return board_img
-
-
 def update_sheet(header, rows, worksheet):
     modified_data = [header] + rows
     worksheet.clear()
@@ -295,14 +419,22 @@ def update_sheet(header, rows, worksheet):
 
 
 header, rows, worksheet = init()
-camels = Camels()
+game = Game()
+game.place_trap(2, "Minus")
 
-# for i in range(3):
-#     for j in range(5):
-#         if j == 4:
-#             camels.restart_round()
-#         rows = roll_dice(rows, "Mike", camels)
+while True:
+    game_over = False
+    for j in range(5):
+        if len(game.can_move) == 0:
+            game.restart_round()
+        rows, color, step, board_image, is_over, winner = game.roll_dice(rows, "Mike")
+        board_image.show()
+        if is_over:
+            game_over = True
+            print(f"{winner.color} 獲勝！")
+            break
+    if game_over:
+        break
 
 
-rows, color, step, board_image = roll_dice(rows, "Mike", camels)
 # update_sheet(header, rows, worksheet)
